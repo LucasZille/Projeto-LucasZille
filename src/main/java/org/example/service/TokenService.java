@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -40,15 +41,15 @@ public class TokenService {
         var accessToken = getAccessToken(usuario.getUsername(), roles, now, validity);
         var refreshToken = getRefreshToken(usuario.getUsername(), roles, now);
 
-        return new TokenDTO(usuario.getUsername(), true, now, validity, accessToken, refreshToken);
+        return new TokenDTO(usuario.getUsername(), true, accessToken, refreshToken, new Date(now.getTime()), validity);
     }
 
     private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
         String issuerUrl = ServletUriComponentsBuilder
                 .fromCurrentContextPath().build().toUriString()
-                + "/alunoOnline";
+                + "/Students";
         return JWT.create()
-                .withClaim("listaPerfeil", roles)
+                .withClaim("listaPerfil", roles)
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .withSubject(username)

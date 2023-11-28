@@ -5,6 +5,7 @@ import org.example.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,17 +31,16 @@ public class FilterToken extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String token;
-
-        var authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization");
 
         if(authorizationHeader != null){
-            token = authorizationHeader.replace("Bearer ", "");
-            var subject = this.tokenService.getSubject(token);
 
-            var usuario = this.userDetailsService.loadUserByUsername(subject);
+            String token = authorizationHeader.replace("Bearer ", "");
+            String subject = this.tokenService.getSubject(token);
 
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null,
+            UserDetails usuario = this.userDetailsService.loadUserByUsername(subject);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null,
                     usuario.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

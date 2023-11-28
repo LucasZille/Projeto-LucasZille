@@ -1,11 +1,12 @@
 package org.example.model;
 
+import lombok.Data;
 import org.example.enums.RoleName;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
+@Data
 @Entity
 @Table(name="role_model")
 public class RoleModel implements GrantedAuthority, Serializable {
@@ -23,21 +24,5 @@ public class RoleModel implements GrantedAuthority, Serializable {
     @Override
     public String getAuthority() {
         return this.roleName.toString();
-    }
-
-    public Long getROLEId() {
-        return ROLEId;
-    }
-
-    public void setROLEId(Long ROLEId) {
-        this.ROLEId = ROLEId;
-    }
-
-    public RoleName getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(RoleName roleName) {
-        this.roleName = roleName;
     }
 }
